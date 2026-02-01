@@ -6,7 +6,7 @@
   "action": {
     "title": "SD 角色卡",
     "icon": "icon.svg",
-    "popover": "index.html",
+    "popover": "/",
     "height": 720,
     "width": 1000
   }
