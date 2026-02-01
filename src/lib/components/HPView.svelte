@@ -30,11 +30,17 @@
   bind:value={$pc.hitPoints}
 />
 
-<div class="flex gap-1 justify-between">
-  <div>最大值: {calculateTotalHitPointsForPlayer($pc)}</div>
-  <div>
-    <button on:click={decrMaxHp}><i class="material-icons">remove</i></button>
-    <button on:click={incrMaxHp}><i class="material-icons">add</i></button>
+<div class="flex gap-1 justify-between items-center text-sm mt-1">
+  <div class="whitespace-nowrap">
+    最大值: {calculateTotalHitPointsForPlayer($pc)}
+  </div>
+  <div class="flex items-center">
+    <button class="hover:bg-gray-700 rounded" on:click={decrMaxHp}
+      ><i class="material-icons text-base align-middle">remove</i></button
+    >
+    <button class="hover:bg-gray-700 rounded" on:click={incrMaxHp}
+      ><i class="material-icons text-base align-middle">add</i></button
+    >
   </div>
 </div>
 
