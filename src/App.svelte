@@ -38,7 +38,9 @@
       LocalStorageSaver.init();
     }
   });
+
   $: setCustomGearForPlayer($pc);
+  $: autoTitle = calculateTitleForPlayer($pc);
 
   $: xpCap = $pc.level === 0 ? 10 : $pc.level * 10;
   $: canLevel = $pc.level < 10 && $pc.xp >= xpCap;
@@ -205,7 +207,10 @@
         <div class="col-span-full cell">
           <h2>稱號</h2>
           <h2>稱號</h2>
-          <input type="text" bind:value={$pc.title} />
+          <input type="text" bind:value={$pc.title} placeholder={autoTitle} />
+          <div class="text-xs text-gray-500 mt-1">
+            預設: {autoTitle}
+          </div>
         </div>
         <div class="col-span-full cell">
           <h2>陣營</h2>

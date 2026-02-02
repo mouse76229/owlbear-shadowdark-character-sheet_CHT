@@ -133,18 +133,21 @@ export function setAncestryForPlayer(pc: PlayerCharacter, a: Ancestry | "") {
 
 // Helper to get all bonuses (Player Bonuses + Equipped Gear Bonuses)
 export function getAllActiveBonuses(pc: PlayerCharacter): Bonus[] {
-  const gearBonuses = pc.gear
+  const gearBonuses = (pc.gear || [])
     .filter((g) => g.equipped)
     .flatMap((g) => {
       const info = findAny(g.name);
       return info?.playerBonuses || [];
     });
 
-  const customGearBonuses = pc.customGear
+  const customGearBonuses = (pc.customGear || [])
     .filter((g) => g.equipped)
     .flatMap((g) => g.playerBonuses || []);
 
-  return [...pc.bonuses, ...pc.customBonuses, ...gearBonuses, ...customGearBonuses];
+  const bonuses = pc.bonuses || [];
+  const customBonuses = pc.customBonuses || [];
+
+  return [...bonuses, ...customBonuses, ...gearBonuses, ...customGearBonuses];
 }
 
 export function calculateStatValueForPlayerStat(
@@ -302,9 +305,19 @@ export function calculateArmorClassForPlayer(pc: PlayerCharacter) {
   return finalAC;
 }
 
-export function calculateTitleForPlayer(pc: PlayerCharacter): Title | null {
-  // 5E doesn't really have level titles
-  return pc.title || null;
+import { t_Alignment } from "../translations";
+
+export function calculateTitleForPlayer(pc: PlayerCharacter): string {
+  if (pc.title) return pc.title;
+
+  const alignment = t_Alignment(pc.alignment);
+  const background = pc.background || "";
+  const cls = pc.class || "";
+  const level = pc.level;
+
+  // Format: "Chaotic Good Noble Fighter (Lv. 3)"
+  const parts = [alignment, background, cls].filter(p => p).join(" ");
+  return `${parts} (Lv. ${level})`;
 }
 
 // 5E Spell Save DC = 8 + Proficiency + Stat Mod
