@@ -13,11 +13,13 @@
   export let forStat: Stat;
   const pc = PlayerCharacterStore;
   $: modifier = calculateModifierForPlayerStat($pc, forStat);
-  $: statValue = calculateStatValueForPlayerStat($pc, forStat);
+  $: currentTotalStat = calculateStatValueForPlayerStat($pc, forStat);
+  $: bonus = calculateBonusForPlayerStat($pc, forStat);
+
   function onInput(e: Event) {
-    $pc.stats[forStat] =
-      parseInt((e.target as HTMLInputElement).value) -
-      calculateBonusForPlayerStat($pc, forStat);
+    const inputVal = parseInt((e.target as HTMLInputElement).value) || 10;
+    // User inputs total value, we save base value
+    $pc.stats[forStat] = inputVal - bonus;
   }
 </script>
 
@@ -29,7 +31,7 @@
         id={`${forStat}-input}`}
         type="number"
         inputmode="numeric"
-        value={statValue}
+        value={currentTotalStat}
         on:input={onInput}
         min="1"
         max="20"

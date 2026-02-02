@@ -296,6 +296,7 @@ export type GearInfo = {
   playerBonuses?: Bonus[];
   editable?: boolean;
   l10n?: L10nInfo;
+  equipped?: boolean; // For custom gear instances
 };
 export type Gear = {
   name: string;

@@ -131,6 +131,22 @@ export function setAncestryForPlayer(pc: PlayerCharacter, a: Ancestry | "") {
   ensureLanguages(pc);
 }
 
+// Helper to get all bonuses (Player Bonuses + Equipped Gear Bonuses)
+export function getAllActiveBonuses(pc: PlayerCharacter): Bonus[] {
+  const gearBonuses = pc.gear
+    .filter((g) => g.equipped)
+    .flatMap((g) => {
+      const info = findAny(g.name);
+      return info?.playerBonuses || [];
+    });
+
+  const customGearBonuses = pc.customGear
+    .filter((g) => g.equipped)
+    .flatMap((g) => g.playerBonuses || []);
+
+  return [...pc.bonuses, ...pc.customBonuses, ...gearBonuses, ...customGearBonuses];
+}
+
 export function calculateStatValueForPlayerStat(
   pc: PlayerCharacter,
   stat: Stat,
@@ -162,7 +178,8 @@ export function calculateDamageDiceTypeForPlayerWeapon(
 
   // In 5E, dice type upgrades are rare (Monk martial arts etc).
   // Keeping logic generic for now.
-  const diceTypeBonuses = pc.bonuses
+  const activeBonuses = getAllActiveBonuses(pc);
+  const diceTypeBonuses = activeBonuses
     .filter(
       (b) =>
         b.type === "diceType" &&
@@ -184,7 +201,8 @@ export function calculateBonusForPlayerStat(
   pc: PlayerCharacter,
   stat: Stat,
 ): number {
-  return pc.bonuses
+  const activeBonuses = getAllActiveBonuses(pc);
+  return activeBonuses
     .filter(
       (b) =>
         b.type === "modifyAmt" &&
@@ -265,7 +283,8 @@ export function calculateArmorClassForPlayer(pc: PlayerCharacter) {
   }
 
   // Global AC Bonuses (Ring of Protection, Fighting Style, etc.)
-  const miscBonuses = pc.bonuses.reduce((acc, b) => {
+  const activeBonuses = getAllActiveBonuses(pc);
+  const miscBonuses = activeBonuses.reduce((acc, b) => {
     if (b.type === "modifyAmt" && b.bonusTo === "armorClass") {
       return acc + calculateBonusAmount(pc, b);
     }
@@ -273,6 +292,12 @@ export function calculateArmorClassForPlayer(pc: PlayerCharacter) {
   }, 0);
 
   finalAC += miscBonuses;
+
+  // Add Manual Bonus (pc.armorClass - 10)
+  // Assuming 10 is the base for everyone, any deviation in pc.armorClass is treated as a manual modifier
+  if (pc.armorClass !== 10) {
+    finalAC += (pc.armorClass - 10);
+  }
 
   return finalAC;
 }
@@ -468,7 +493,8 @@ export function deleteBonusForPlayer(pc: PlayerCharacter, theBonus: Bonus) {
 
 export function calculateTotalHitPointsForPlayer(pc: PlayerCharacter): number {
   const baseMaxHP = pc.maxHitPoints;
-  const bonuses = pc.bonuses
+  const activeBonuses = getAllActiveBonuses(pc);
+  const bonuses = activeBonuses
     .filter((b) => {
       return b.type === "modifyAmt" && b.bonusTo === "hp";
     })

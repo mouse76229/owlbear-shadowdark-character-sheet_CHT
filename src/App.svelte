@@ -40,7 +40,6 @@
   });
   $: setCustomGearForPlayer($pc);
 
-  $: title = calculateTitleForPlayer($pc);
   $: xpCap = $pc.level === 0 ? 10 : $pc.level * 10;
   $: canLevel = $pc.level < 10 && $pc.xp >= xpCap;
   const { canUndo, canRedo } = pc;
@@ -205,17 +204,8 @@
         </div>
         <div class="col-span-full cell">
           <h2>稱號</h2>
-          {#if $pc.hasCustomClass}
-            <input
-              type="text"
-              value={title ?? $pc.title}
-              on:input={onTitleInput}
-            />
-          {:else}
-            <div>
-              {t_Title(title ?? $pc.title, getClass($pc.class), $pc.alignment)}
-            </div>
-          {/if}
+          <h2>稱號</h2>
+          <input type="text" bind:value={$pc.title} />
         </div>
         <div class="col-span-full cell">
           <h2>陣營</h2>

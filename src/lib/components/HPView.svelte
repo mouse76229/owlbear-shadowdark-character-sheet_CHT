@@ -6,16 +6,21 @@
 
   function incrMaxHp() {
     $pc.maxHitPoints += 1;
+    $pc = $pc; // Force update
   }
   function decrMaxHp() {
     $pc.maxHitPoints = Math.max(1, $pc.maxHitPoints - 1);
     if ($pc.hitPoints > $pc.maxHitPoints) {
       $pc.hitPoints = $pc.maxHitPoints;
     }
+    $pc = $pc; // Force update
   }
   function longRest() {
     $pc.hitPoints = $pc.maxHitPoints;
-    $pc.spells = $pc.spells.map((s) => ({ name: s.name, failed: false }));
+    // Reset spell slots if we implement them later, for now just reset usage flags if any
+    $pc.spells = $pc.spells.map((s) => ({ ...s }));
+    // In 5E, we might want to recover Hit Dice here too, but for UI button:
+    $pc = $pc;
   }
 </script>
 
