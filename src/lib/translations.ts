@@ -114,30 +114,37 @@ export const LANGUAGE_MAP: Record<Language, string> = {
 
 // Helper functions
 export function t_Class(c: string): string {
+    if (!c) return "";
     return CLASS_MAP[c as Class] ?? c;
 }
 
 export function t_Ancestry(a: string): string {
+    if (!a) return "";
     return ANCESTRY_MAP[a as Ancestry] ?? a;
 }
 
 export function t_Alignment(a: string): string {
+    if (!a) return "";
     return ALIGNMENT_MAP[a as Alignment] ?? a;
 }
 
 export function t_Stat(s: string): string {
+    if (!s) return "";
     return STAT_MAP[s as Stat] ?? s;
 }
 
 export function t_Background(b: string): string {
+    if (!b) return "";
     return BACKGROUND_MAP[b as Background] ?? b;
 }
 
 export function t_Deity(d: string): string {
+    if (!d) return "";
     return DEITY_MAP[d as Deity] ?? d;
 }
 
 export function t_Language(l: string): string {
+    if (!l) return "";
     return LANGUAGE_MAP[l as Language] ?? l;
 }
 

@@ -1,5 +1,5 @@
 import { get, writable } from "svelte/store";
-import { PlayerCharacterStore } from "../model/PlayerCharacter";
+import { PlayerCharacterStore, ensurePlayerCharacterIntegrity } from "../model/PlayerCharacter";
 import { defaultPC } from "../model/PlayerCharacter";
 import { debounce } from "../utils";
 import { CurrentSaveSlot, NUM_SLOTS } from "./SaveSlotTracker";
@@ -69,8 +69,13 @@ export async function loadPlayerFromLocalStorage(
   await maintainBackwardsCompatSlot(saveSlot);
   const pcJson = await asyncLocalStorage.getItem(getStorageKey(saveSlot));
   if (!pcJson) return defaultPC();
-  const pc = JSON.parse(pcJson) as PlayerCharacter;
-  return pc;
+  try {
+    const parsed = JSON.parse(pcJson);
+    return ensurePlayerCharacterIntegrity(parsed);
+  } catch (e) {
+    console.warn("Failed to parse save, resetting slot", e);
+    return defaultPC();
+  }
 }
 
 async function maintainBackwardsCompatSlot(saveSlot: number) {

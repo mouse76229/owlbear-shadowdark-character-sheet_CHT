@@ -100,6 +100,41 @@ export function defaultPC(): PlayerCharacter {
   };
 }
 
+export function ensurePlayerCharacterIntegrity(pc: Partial<PlayerCharacter> | null | undefined): PlayerCharacter {
+  const def = defaultPC();
+  if (!pc) return def;
+
+  // Deep merge for critical nested objects to avoid undefined errors
+  return {
+    ...def,
+    ...pc,
+    stats: { ...def.stats, ...(pc.stats || {}) },
+    skills: { ...def.skills, ...(pc.skills || {}) },
+    savingThrows: { ...def.savingThrows, ...(pc.savingThrows || {}) },
+    currency: { ...def.currency, ...(pc.currency || {}) },
+    hitDice: { ...def.hitDice, ...(pc.hitDice || {}) },
+    deathSaves: { ...def.deathSaves, ...(pc.deathSaves || {}) },
+
+    // Arrays: Fallback to empty if undefined, but keep existing arrays
+    gear: Array.isArray(pc.gear) ? pc.gear : [],
+    customGear: Array.isArray(pc.customGear) ? pc.customGear : [],
+    spells: Array.isArray(pc.spells) ? pc.spells : [],
+    customSpells: Array.isArray(pc.customSpells) ? pc.customSpells : [],
+    bonuses: Array.isArray(pc.bonuses) ? pc.bonuses : [],
+    customBonuses: Array.isArray(pc.customBonuses) ? pc.customBonuses : [],
+    customTalents: Array.isArray(pc.customTalents) ? pc.customTalents : [],
+    conditions: Array.isArray(pc.conditions) ? pc.conditions : [],
+    languages: Array.isArray(pc.languages) ? pc.languages : [],
+    customLanguages: Array.isArray(pc.customLanguages) ? pc.customLanguages : [],
+
+    // Primitives that might be missing in old saves
+    proficiencyBonus: pc.proficiencyBonus ?? def.proficiencyBonus,
+    armorClass: pc.armorClass ?? def.armorClass,
+    maxHitPoints: pc.maxHitPoints ?? def.maxHitPoints,
+    hitPoints: pc.hitPoints ?? def.hitPoints,
+  };
+}
+
 // 5E Proficiency Bonus: ceil(level / 4) + 1
 // Level 1-4: +2, 5-8: +3, 9-12: +4, 13-16: +5, 17-20: +6
 export function calculateProficiencyBonus(level: number): number {
