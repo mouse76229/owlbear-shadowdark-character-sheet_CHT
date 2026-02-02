@@ -82,7 +82,7 @@
       class="bg-black min-w-[277px] max-w-[1000px] p-2 flex flex-wrap gap-2"
     >
       <div
-        class="flex-[2] min-w-[257px] h-[700px] grid grid-rows-8 grid-cols-2 gap-2"
+        class="flex-[2] min-w-[257px] h-[700px] grid grid-rows-9 grid-cols-2 gap-2"
       >
         <div class="col-span-full cell">
           <div class="flex gap-1 justify-around">
@@ -151,6 +151,14 @@
         </div>
         <div class="row-span-2 cell">
           <ArmorClassView />
+        </div>
+        <div class="col-span-full grid grid-cols-2 gap-2">
+          <div class="cell overflow-y-auto">
+            <DeathSavesView />
+          </div>
+          <div class="cell overflow-y-auto">
+            <ConditionsView />
+          </div>
         </div>
         <div class="col-span-full row-span-2 cell">
           <AttacksView />
@@ -243,12 +251,7 @@
           <h2>神祇</h2>
           <input bind:value={$pc.deity} />
         </div>
-        <div class="col-span-full cell overflow-y-auto">
-          <DeathSavesView />
-        </div>
-        <div class="col-span-full cell overflow-y-auto">
-          <ConditionsView />
-        </div>
+
       </div>
       <div
         class="flex-[3] min-w-[257px] min-[805px]:h-[700px] grid grid-rows-2 gap-2"
