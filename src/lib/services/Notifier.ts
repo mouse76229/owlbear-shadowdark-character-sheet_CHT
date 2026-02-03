@@ -37,9 +37,11 @@ export async function showPopover(msg: string) {
     timeoutHandle = null;
   }
   try {
+    // 使用完整 URL 確保在 Owlbear Rodeo iframe 中正確解析
+    const popoverUrl = new URL(`./popover.html?msg=${encodeURIComponent(msg)}`, window.location.href).href;
     await OBR.popover.open({
       id: popoverId,
-      url: `./popover.html?msg=${encodeURIComponent(msg)}`,
+      url: popoverUrl,
       height: 100,
       width: 400,
     });
