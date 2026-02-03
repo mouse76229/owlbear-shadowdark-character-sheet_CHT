@@ -29,6 +29,9 @@ export async function notifiy(msg: string, options: NotifyOptions = {}) {
 
 let timeoutHandle: NodeJS.Timeout;
 
+// GitHub Pages 基礎 URL
+const BASE_URL = "https://mouse76229.github.io/owlbear-shadowdark-character-sheet_CHT";
+
 export async function showPopover(msg: string) {
   pushNotification(msg);
   const popoverId = pluginId("popover");
@@ -37,11 +40,9 @@ export async function showPopover(msg: string) {
     timeoutHandle = null;
   }
   try {
-    // 使用完整 URL 確保在 Owlbear Rodeo iframe 中正確解析
-    const popoverUrl = new URL(`./popover.html?msg=${encodeURIComponent(msg)}`, window.location.href).href;
     await OBR.popover.open({
       id: popoverId,
-      url: popoverUrl,
+      url: `${BASE_URL}/popover.html?msg=${encodeURIComponent(msg)}`,
       height: 100,
       width: 400,
     });
