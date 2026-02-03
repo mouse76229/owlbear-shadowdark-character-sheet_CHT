@@ -29,9 +29,6 @@ export async function notifiy(msg: string, options: NotifyOptions = {}) {
 
 let timeoutHandle: NodeJS.Timeout;
 
-// GitHub Pages 基礎 URL
-const BASE_URL = "https://mouse76229.github.io/owlbear-shadowdark-character-sheet_CHT";
-
 export async function showPopover(msg: string) {
   pushNotification(msg);
   const popoverId = pluginId("popover");
@@ -42,7 +39,7 @@ export async function showPopover(msg: string) {
   try {
     await OBR.popover.open({
       id: popoverId,
-      url: `${BASE_URL}/popover.html?msg=${encodeURIComponent(msg)}`,
+      url: `/owlbear-shadowdark-character-sheet_CHT/popover.html?msg=${encodeURIComponent(msg)}`,
       height: 100,
       width: 400,
     });
